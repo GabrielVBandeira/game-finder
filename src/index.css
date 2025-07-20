@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.custom-bullet {
+	@apply w-2 h-2 rounded-full bg-pink-300 dark:bg-sky-600 opacity-60 transition-all;
+}
+
+.custom-bullet.swiper-pagination-bullet-active {
+	@apply scale-110 opacity-100 bg-pink-600 dark:bg-sky-400;
+}
