@@ -90,7 +90,7 @@ export default function Filters({ onSubmit, initialTitle = '' }) {
 	}, [initialTitle]);
 
 	useEffect(() => {
-		const timeout = setTimeout(() => setDebouncedTitle(title), 300);
+		const timeout = setTimeout(() => setDebouncedTitle(title), 600);
 		return () => clearTimeout(timeout);
 	}, [title]);
 

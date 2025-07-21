@@ -125,7 +125,7 @@ export default function RamMatchCard() {
 								alt={matchedGame.title}
 								onLoad={() => {
 									setImageLoaded(true);
-									setTimeout(() => setCardOpened(true), 300);
+									setTimeout(() => setCardOpened(true), 600);
 								}}
 								className="w-full h-full object-cover rounded shadow"
 							/>

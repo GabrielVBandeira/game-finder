@@ -71,11 +71,55 @@ export default function GameDetails() {
 					>
 						{game.screenshots.map((screenshot) => (
 							<SwiperSlide key={screenshot.id}>
-								<img
-									src={screenshot.image}
-									alt={`Screenshot ${screenshot.id}`}
-									className="rounded-lg shadow-lg w-full max-h-[500px] object-cover"
-								/>
+								<div className="relative w-full max-h-[500px]">
+									<img
+										src={screenshot.image}
+										alt={`Screenshot ${screenshot.id}`}
+										className="rounded-lg shadow-lg w-full h-full object-cover"
+									/>
+
+									{/* Botão anterior */}
+									<button
+										className="swiper-button-prev-custom absolute top-1/2 left-4 -translate-y-1/2 z-10 p-2"
+										aria-label="Anterior"
+									>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											fill="none"
+											viewBox="0 0 24 24"
+											strokeWidth={1.5}
+											stroke="currentColor"
+											className="w-8 h-8 text-pink-600 dark:text-sky-400 hover:text-pink-400 dark:hover:text-sky-300 transition"
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												d="M15.75 19.5L8.25 12l7.5-7.5"
+											/>
+										</svg>
+									</button>
+
+									{/* Botão próximo */}
+									<button
+										className="swiper-button-next-custom absolute top-1/2 right-4 -translate-y-1/2 z-10 p-2"
+										aria-label="Próxima"
+									>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											fill="none"
+											viewBox="0 0 24 24"
+											strokeWidth={1.5}
+											stroke="currentColor"
+											className="w-8 h-8 text-pink-600 dark:text-sky-400 hover:text-pink-400 dark:hover:text-sky-300 transition"
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												d="M8.25 4.5l7.5 7.5-7.5 7.5"
+											/>
+										</svg>
+									</button>
+								</div>
 							</SwiperSlide>
 						))}
 					</Swiper>

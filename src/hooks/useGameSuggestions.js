@@ -34,7 +34,7 @@ export default function useGameSuggestions(query) {
 			}
 		};
 
-		const delay = setTimeout(fetchData, 300);
+		const delay = setTimeout(fetchData, 600);
 		return () => clearTimeout(delay);
 	}, [query]);
 
