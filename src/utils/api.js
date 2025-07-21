@@ -1,6 +1,4 @@
-const BASE_URL = import.meta.env.DEV
-	? `${window.location.origin}/api/games`
-	: 'https://www.freetogame.com/api/games';
+const BASE_URL = '/api/games';
 
 /**
  * Consulta um jogo aleatório com base em filtros.
