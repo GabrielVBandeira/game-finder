@@ -1,12 +1,106 @@
-# React + Vite
+# 🎮 Game Finder
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Uma plataforma web para encontrar jogos gratuitos com base em filtros como gênero, plataforma e memória RAM disponível. Construída com **React + Vite**, com foco em **acessibilidade**, **tema escuro/claro**, **busca inteligente** e integração com a [FreeToGame API](https://www.freetogame.com/api-doc).
 
-Currently, two official plugins are available:
+![Game Finder Preview](./src/assets/print-example.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## ✨ Funcionalidades
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- 🔍 Busca inteligente com sugestões em tempo real
+- 🎨 Tema claro/escuro com suporte a acessibilidade
+- 🧠 Filtros dinâmicos com visualização e remoção de filtros ativos
+- 🎭 Efeitos animados com Framer Motion
+- 🧮 Filtro por memória RAM mínima para recomendações compatíveis
+- 🖼️ Carrossel com capturas de tela detalhadas do jogo
+- 📱 Responsivo (desktop e mobile)
+
+---
+
+## 📸 Projeto em Produção (Vercel)
+
+https://game-finder-two.vercel.app/
+
+---
+
+## 🚀 Tecnologias
+
+| Ferramenta                                                | Descrição                                |
+| --------------------------------------------------------- | ---------------------------------------- |
+| [React](https://reactjs.org)                              | Biblioteca para interfaces web           |
+| [Vite](https://vitejs.dev)                                | Bundler moderno e rápido                 |
+| [TailwindCSS](https://tailwindcss.com)                    | Utilitários CSS altamente customizáveis  |
+| [Framer Motion](https://www.framer.com/motion/)           | Animações fluídas e acessíveis           |
+| [React Icons](https://react-icons.github.io/react-icons/) | Ícones SVG populares                     |
+| [SwiperJS](https://swiperjs.com/)                         | Carrossel com touch e navegação          |
+| [FreeToGame API](https://www.freetogame.com/api-doc)      | API pública com milhares de jogos grátis |
+
+---
+
+## ⚙️ Instalação
+
+```bash
+# Clone o repositório
+git clone https://github.com/seu-usuario/game-finder.git
+cd game-finder
+
+# Instale as dependências
+npm install
+
+# Rode o projeto localmente
+npm run dev
+```
+
+## 🧪 Estrutura do Projeto
+
+```plaintext
+├── api/                   # APIs para Games e Game Details
+├── src/
+│   ├── assets/            # SVGs e imagens
+│   ├── components/        # Componentes reutilizáveis
+│   ├── hooks/             # Hooks customizados
+│   ├── pages/             # Páginas principais (Home, Detalhes, Busca)
+│   ├── utils/             # Utilitários auxiliares
+│   ├── App.jsx            # Root do app
+├── public/                # Assets públicos
+├── vite.config.js         # Configurações do Vite (inclui proxy)
+└── README.md              # Este arquivo
+```
+
+## 🔐 Hospedagem e Proxy
+
+- Em produção (ex: Vercel), o projeto consome diretamente a FreeToGame API.
+
+- Durante o desenvolvimento, é possível usar um proxy local via vite.config.js ou criar handlers em /api para facilitar o uso com o mesmo domínio.
+  export default defineConfig({
+
+```plaintext
+// vite.config.js
+export default defineConfig({
+	plugins: [react()],
+	server: {
+		proxy: {
+			'/api/games': {
+				target: 'https://www.freetogame.com',
+				changeOrigin: true,
+				secure: false,
+				rewrite: (path) => path.replace(/^\/api\/games/, '/api/games'),
+			},
+			'/api/game': {
+				target: 'https://www.freetogame.com',
+				changeOrigin: true,
+				secure: false,
+				rewrite: (path) => path.replace(/^\/api\/game/, '/api/game'),
+			},
+		},
+	},
+});
+
+```
+
+## 📌 Melhorias futuras
+
+- Suporte multilíngue (i18n)
+- Testes Automatizados
+- Sistema de Avaliação

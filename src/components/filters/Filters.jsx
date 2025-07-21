@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useToast } from '../common/ToastProvider';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPlus, FaMinus } from 'react-icons/fa';
@@ -7,7 +7,7 @@ import Select from 'react-select';
 import useDynamicFilters from '../../hooks/useDynamicFilters';
 import useTailwindDarkMode from '../../hooks/useTailwindDarkMode';
 
-export default function Filters({ onSubmit, initialTitle = '' }) {
+export default function Filters({ onSubmit, initialTitle = '', filters }) {
 	const isDarkMode = useTailwindDarkMode();
 
 	const customSelectStyles = {
@@ -88,6 +88,26 @@ export default function Filters({ onSubmit, initialTitle = '' }) {
 	useEffect(() => {
 		setTitle(initialTitle);
 	}, [initialTitle]);
+
+	const prevFiltersRef = useRef();
+
+	useEffect(() => {
+		if (
+			filters &&
+			JSON.stringify(filters) !== JSON.stringify(prevFiltersRef.current)
+		) {
+			setTitle(filters.title || '');
+			setSelectedGenres(filters.genres || []);
+			setSelectedPublishers(
+				filters.publishers?.map((p) => ({ value: p, label: p })) || [],
+			);
+			setSelectedDevelopers(
+				filters.developers?.map((d) => ({ value: d, label: d })) || [],
+			);
+			setPlatform(filters.platform || 'all');
+			prevFiltersRef.current = filters;
+		}
+	}, [filters]);
 
 	useEffect(() => {
 		const timeout = setTimeout(() => setDebouncedTitle(title), 600);

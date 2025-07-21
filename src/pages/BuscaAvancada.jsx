@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import Filters from '../components/filters/Filters';
 import SearchResults from '../components/filters/SearchResults';
+import ActiveFilters from '../components/filters/ActiveFilters';
 
 export default function BuscaAvancada() {
 	const location = useLocation();
@@ -39,6 +40,21 @@ export default function BuscaAvancada() {
 		setCurrentPage(1);
 	};
 
+	const handleRemoveFilter = (key, value) => {
+		if (!searchFilters) return;
+
+		const updated = { ...searchFilters };
+
+		if (key === 'title' || key === 'platform') {
+			updated[key] = '';
+		} else if (Array.isArray(updated[key])) {
+			updated[key] = updated[key].filter((item) => item !== value);
+		}
+
+		setSearchFilters(updated);
+		setCurrentPage(1);
+	};
+
 	useEffect(() => {
 		if (initialTitleFromSearch) {
 			setSearchFilters({
@@ -56,17 +72,24 @@ export default function BuscaAvancada() {
 				<Filters
 					onSubmit={handleSearch}
 					initialTitle={searchFilters?.title || initialTitleFromSearch}
+					filters={searchFilters}
 				/>
 			</div>
 
 			<div className="flex-1">
 				{searchFilters ? (
-					<SearchResults
-						filters={searchFilters}
-						onClear={handleClear}
-						currentPage={currentPage}
-						setCurrentPage={setCurrentPage}
-					/>
+					<>
+						<ActiveFilters
+							filters={searchFilters}
+							onRemove={handleRemoveFilter}
+						/>
+						<SearchResults
+							filters={searchFilters}
+							onClear={handleClear}
+							currentPage={currentPage}
+							setCurrentPage={setCurrentPage}
+						/>
+					</>
 				) : (
 					<p className="text-gray-600 dark:text-gray-300 text-center mt-8">
 						Preencha os filtros ao lado para buscar jogos.

@@ -56,11 +56,11 @@ export default function SearchResults({
 	}
 
 	return (
-		<section className="w-full mx-auto px-4 py-6">
+		<section className="w-full mx-auto px-4">
 			<AnimatePresence mode="wait">
 				<motion.div
 					key={currentPage}
-					className="grid gap-4 mt-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
+					className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4"
 					initial={{ opacity: 0 }}
 					animate={{ opacity: 1 }}
 					exit={{ opacity: 0 }}
