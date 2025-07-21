@@ -35,7 +35,7 @@ export function useGameDetails(id, onError) {
 				onError?.();
 				navigate('/');
 			} finally {
-				setTimeout(() => setLoading(false), 600);
+				setTimeout(() => setLoading(false), 1000);
 			}
 		};
 

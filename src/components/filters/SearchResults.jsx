@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from 'framer-motion';
@@ -27,7 +27,17 @@ export default function SearchResults({
 	const start = (currentPage - 1) * itemsPerPage;
 	const paginated = results.slice(start, start + itemsPerPage);
 
-	if (loading) {
+	const [loadingPage, setLoadingPage] = useState(false);
+
+	const handlePageChange = (newPage) => {
+		setLoadingPage(true);
+		setTimeout(() => {
+			setCurrentPage(newPage);
+			setLoadingPage(false);
+		}, 600);
+	};
+
+	if (loading || loadingPage) {
 		return (
 			<section className="w-full mx-auto px-4 py-6">
 				<Loader />
@@ -65,7 +75,7 @@ export default function SearchResults({
 			<div className="flex justify-center items-center gap-4 mt-6">
 				<button
 					disabled={currentPage === 1}
-					onClick={() => setCurrentPage((p) => p - 1)}
+					onClick={() => handlePageChange(currentPage - 1)}
 					className="flex items-center gap-2 px-3 py-1 rounded-md text-sm font-medium text-white bg-rose-500 hover:bg-rose-400 disabled:opacity-40 dark:bg-sky-700 dark:hover:bg-sky-500 transition-colors"
 				>
 					<FaArrowLeft /> Anterior
@@ -77,9 +87,7 @@ export default function SearchResults({
 
 				<button
 					disabled={currentPage === totalPages}
-					onClick={() =>
-						currentPage < totalPages && setCurrentPage((p) => p + 1)
-					}
+					onClick={() => handlePageChange(currentPage + 1)}
 					className="flex items-center gap-2 px-3 py-1 rounded-md text-sm font-medium text-white bg-rose-500 hover:bg-rose-400 disabled:opacity-40 dark:bg-sky-700 dark:hover:bg-sky-500 transition-colors"
 				>
 					Próxima <FaArrowRight />
