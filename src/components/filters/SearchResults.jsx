@@ -1,88 +1,41 @@
-import React, { useEffect, useState } from 'react';
-import GameCard from '../game/GameCard';
+import React from 'react';
+import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
+// eslint-disable-next-line no-unused-vars
+import { motion, AnimatePresence } from 'framer-motion';
+import GameCard from '../cards/GameCard';
 import Loader from '../common/Loader';
 import EmptyState from '../common/EmptyState';
 import { useToast } from '../common/ToastProvider';
-import { FaArrowLeft, FaArrowRight } from 'react-icons/fa';
-// eslint-disable-next-line no-unused-vars
-import { AnimatePresence, motion } from 'framer-motion';
+import useFilteredGames from '../../hooks/useFilteredGames';
+import useIsMobile from '../../hooks/useIsMobile';
 
 const ITEMS_PER_PAGE = 8;
+const ITEMS_PER_PAGE_MOBILE = 4;
 
-export default function SearchResults({ term, onClear }) {
-	const [results, setResults] = useState([]);
-	const [loading, setLoading] = useState(true);
-	const [currentPage, setCurrentPage] = useState(1);
+export default function SearchResults({
+	filters,
+	onClear,
+	currentPage,
+	setCurrentPage,
+}) {
 	const { error } = useToast();
+	const { filteredGames: results, loading } = useFilteredGames(filters, error);
+	const isMobile = useIsMobile();
 
-	// Busca inicial com filtro
-	useEffect(() => {
-		const fetchGames = async () => {
-			try {
-				setLoading(true);
-				const startTime = Date.now();
-				const res = await fetch('api/api/games');
-				const data = await res.json();
+	const itemsPerPage = isMobile ? ITEMS_PER_PAGE_MOBILE : ITEMS_PER_PAGE;
+	const totalPages = Math.ceil(results.length / itemsPerPage);
+	const start = (currentPage - 1) * itemsPerPage;
+	const paginated = results.slice(start, start + itemsPerPage);
 
-				const filtered = data.filter((game) =>
-					game.title.toLowerCase().includes(term.toLowerCase()),
-				);
+	if (loading) {
+		return (
+			<section className="w-full mx-auto px-4 py-6">
+				<Loader />
+			</section>
+		);
+	}
 
-				const elapsed = Date.now() - startTime;
-				const minDelay = 400;
-
-				setTimeout(() => {
-					setResults(filtered);
-					setCurrentPage(1);
-					setLoading(false);
-				}, Math.max(0, minDelay - elapsed));
-			} catch (err) {
-				console.error('Erro ao buscar jogos:', err);
-				error(
-					'Não foi possível carregar os jogos. Tente novamente mais tarde.',
-				);
-				setResults([]);
-				setLoading(false);
-			}
-		};
-
-		fetchGames();
-	}, [term]);
-
-	const totalPages = Math.ceil(results.length / ITEMS_PER_PAGE);
-	const start = (currentPage - 1) * ITEMS_PER_PAGE;
-	const paginated = results.slice(start, start + ITEMS_PER_PAGE);
-
-	useEffect(() => {
-		if (results.length === 0) return;
-
-		const pageImages = paginated.map((game) => game.thumbnail);
-		let loadedCount = 0;
-
-		const handleImgLoad = () => {
-			loadedCount++;
-			if (loadedCount === pageImages.length) {
-				setLoading(false);
-			}
-		};
-
-		setLoading(true);
-
-		const delay = setTimeout(() => {
-			pageImages.forEach((src) => {
-				const img = new Image();
-				img.onload = handleImgLoad;
-				img.onerror = handleImgLoad;
-				img.src = src;
-			});
-		}, 200);
-
-		return () => clearTimeout(delay);
-	}, [currentPage, results]);
-
-	if (loading) return <Loader />;
-
-	if (results.length === 0)
+	if (results.length === 0) {
 		return (
 			<EmptyState
 				title="Nenhum jogo encontrado"
@@ -90,9 +43,10 @@ export default function SearchResults({ term, onClear }) {
 				onReset={onClear}
 			/>
 		);
+	}
 
 	return (
-		<div>
+		<section className="w-full mx-auto px-4 py-6">
 			<AnimatePresence mode="wait">
 				<motion.div
 					key={currentPage}
@@ -112,9 +66,7 @@ export default function SearchResults({ term, onClear }) {
 				<button
 					disabled={currentPage === 1}
 					onClick={() => setCurrentPage((p) => p - 1)}
-					className="flex items-center gap-2 px-3 py-1 rounded-md text-sm font-medium 
-      text-white bg-rose-500 hover:bg-rose-400 disabled:opacity-40 
-      dark:bg-sky-700 dark:hover:bg-sky-500 transition-colors"
+					className="flex items-center gap-2 px-3 py-1 rounded-md text-sm font-medium text-white bg-rose-500 hover:bg-rose-400 disabled:opacity-40 dark:bg-sky-700 dark:hover:bg-sky-500 transition-colors"
 				>
 					<FaArrowLeft /> Anterior
 				</button>
@@ -125,14 +77,14 @@ export default function SearchResults({ term, onClear }) {
 
 				<button
 					disabled={currentPage === totalPages}
-					onClick={() => setCurrentPage((p) => p + 1)}
-					className="flex items-center gap-2 px-3 py-1 rounded-md text-sm font-medium 
-      text-white bg-rose-500 hover:bg-rose-400 disabled:opacity-40 
-      dark:bg-sky-700 dark:hover:bg-sky-500 transition-colors"
+					onClick={() =>
+						currentPage < totalPages && setCurrentPage((p) => p + 1)
+					}
+					className="flex items-center gap-2 px-3 py-1 rounded-md text-sm font-medium text-white bg-rose-500 hover:bg-rose-400 disabled:opacity-40 dark:bg-sky-700 dark:hover:bg-sky-500 transition-colors"
 				>
 					Próxima <FaArrowRight />
 				</button>
 			</div>
-		</div>
+		</section>
 	);
 }

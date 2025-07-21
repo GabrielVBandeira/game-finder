@@ -28,7 +28,7 @@ export function ToastProvider({ children }) {
 	return (
 		<ToastContext.Provider value={{ showToast, success, error, info, warning }}>
 			{children}
-			<div className="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-xs">
+			<div className="fixed top-24 right-4 z-50 flex flex-col gap-2 max-w-xs">
 				<AnimatePresence>
 					{toasts.map((toast) => (
 						<ToastMessage key={toast.id} {...toast} />

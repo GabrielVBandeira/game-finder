@@ -15,11 +15,14 @@ export default function EmptyState({
 			animate={{ opacity: 1, y: 0 }}
 			exit={{ opacity: 0, y: -10 }}
 			transition={{ duration: 0.3 }}
-			className="flex flex-col items-center gap-3 w-60 sm:w-72 text-[10px] sm:text-xs z-50 mx-auto"
+			className="flex flex-col items-center gap-3 w-80 sm:w-80 text-[10px] sm:text-xs z-50 mx-auto"
 		>
 			<div className="flex items-center justify-between w-full h-14 rounded-lg px-3 bg-gray-100 dark:bg-[#232531] shadow">
 				<div className="flex gap-2 items-center">
-					<div className="text-[#d65563] bg-white/10 dark:bg-white/5 backdrop-blur p-1 rounded-lg">
+					<div
+						className="text-[#d65563] bg-white/10 dark:bg-white/5 backdrop-blur p-1 rounded-lg"
+						aria-hidden="true"
+					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
 							fill="none"
@@ -54,6 +57,7 @@ export default function EmptyState({
 							strokeWidth={1.5}
 							stroke="currentColor"
 							className="w-5 h-5"
+							aria-hidden="true"
 						>
 							<path
 								strokeLinecap="round"
@@ -64,8 +68,6 @@ export default function EmptyState({
 					</button>
 				)}
 			</div>
-
-			{/* O link de limpar busca foi removido do EmptyState e deve ser colocado na Navbar */}
 		</motion.div>
 	);
 }

@@ -6,10 +6,11 @@ export default defineConfig({
 	plugins: [react()],
 	server: {
 		proxy: {
-			'/api': {
+			'/api/game': {
 				target: 'https://www.freetogame.com',
 				changeOrigin: true,
-				rewrite: (path) => path.replace(/^\/api/, ''),
+				secure: false,
+				rewrite: (path) => path.replace(/^\/api\/game/, '/api/game'),
 			},
 		},
 	},

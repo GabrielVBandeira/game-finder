@@ -4,7 +4,7 @@ import { Autoplay, Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import GameCard from '../game/GameCard';
+import GameCard from '../cards/GameCard';
 
 export default function CarouselSwiper({ games }) {
 	return (
@@ -15,6 +15,7 @@ export default function CarouselSwiper({ games }) {
 
 			<div className="relative flex justify-center">
 				<Swiper
+					key={games.length}
 					modules={[Autoplay, Navigation, Pagination]}
 					spaceBetween={45}
 					slidesPerView={3}
@@ -49,7 +50,7 @@ export default function CarouselSwiper({ games }) {
 				</Swiper>
 
 				<button
-					className="swiper-button-prev-custom absolute top-1/2 -translate-y-1/2 left-[calc(50%-650px-1.5rem)] z-10 p-2"
+					className="swiper-button-prev-custom absolute top-1/2 left-0 lg:-left-10 -translate-y-1/2 z-10 p-2"
 					aria-label="Anterior"
 				>
 					<svg
@@ -69,7 +70,7 @@ export default function CarouselSwiper({ games }) {
 				</button>
 
 				<button
-					className="swiper-button-next-custom absolute top-1/2 -translate-y-1/2 right-[calc(50%-650px-1.5rem)] z-10 p-2"
+					className="swiper-button-next-custom absolute top-1/2 right-0 lg:-right-10 -translate-y-1/2 z-10 p-2"
 					aria-label="Próxima"
 				>
 					<svg
@@ -89,7 +90,7 @@ export default function CarouselSwiper({ games }) {
 				</button>
 			</div>
 
-			<div className="custom-pagination flex justify-center mt-4 space-x-1" />
+			<div className="custom-pagination flex justify-center space-x-1" />
 		</section>
 	);
 }

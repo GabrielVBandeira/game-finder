@@ -22,10 +22,11 @@ export default function ThemeToggle() {
 			<div className="flex h-full w-full px-2 items-center gap-x-1">
 				<div className="w-4 h-4 flex-shrink-0 rounded-full border-4 border-[#121331]"></div>
 				<label
-					for="switch"
+					htmlFor="switch"
 					className="has-[:checked]:scale-x-[-1] w-full h-4 border-4 border-[#121331] rounded cursor-pointer"
 				>
 					<input
+						role="switch"
 						type="checkbox"
 						id="switch"
 						className="hidden"

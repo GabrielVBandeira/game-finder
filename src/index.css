@@ -5,6 +5,14 @@
 .custom-bullet {
 	@apply w-2 h-2 rounded-full bg-pink-300 dark:bg-sky-600 opacity-60 transition-all;
 }
+.custom-bullet:first-child,
+.custom-bullet-detail:first-child {
+	@apply mr-0 !important;
+}
+
+.custom-bullet-detail:last-child {
+	@apply ml-0 !important;
+}
 
 .custom-bullet.swiper-pagination-bullet-active {
 	@apply scale-110 opacity-100 bg-pink-600 dark:bg-sky-400;
