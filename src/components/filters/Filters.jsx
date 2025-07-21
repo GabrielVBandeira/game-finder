@@ -9,71 +9,9 @@ import useTailwindDarkMode from '../../hooks/useTailwindDarkMode';
 
 export default function Filters({ onSubmit, initialTitle = '', filters }) {
 	const isDarkMode = useTailwindDarkMode();
-
-	const customSelectStyles = {
-		control: (provided, state) => ({
-			...provided,
-			backgroundColor: isDarkMode ? '#374151' : '#ffffff',
-			borderColor: state.isFocused
-				? isDarkMode
-					? '#60a5fa'
-					: '#fda4af'
-				: isDarkMode
-				? '#4b5563'
-				: '#d1d5db',
-			boxShadow: state.isFocused
-				? `0 0 0 1px ${isDarkMode ? '#3b82f6' : '#f87171'}`
-				: 'none',
-			'&:hover': {
-				borderColor: isDarkMode ? '#3b82f6' : '#f87171',
-			},
-			color: isDarkMode ? '#fff' : '#000',
-		}),
-		menu: (provided) => ({
-			...provided,
-			backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
-		}),
-		option: (provided, state) => ({
-			...provided,
-			backgroundColor: state.isFocused
-				? isDarkMode
-					? '#3b82f6'
-					: '#f87171'
-				: isDarkMode
-				? '#1f2937'
-				: '#ffffff',
-			color: isDarkMode ? '#fff' : '#000',
-			':active': {
-				backgroundColor: isDarkMode ? '#2563eb' : '#f43f5e',
-			},
-		}),
-		multiValue: (provided) => ({
-			...provided,
-			backgroundColor: isDarkMode ? '#4b5563' : '#fda4af',
-		}),
-		multiValueLabel: (provided) => ({
-			...provided,
-			color: isDarkMode ? '#fff' : '#000',
-		}),
-		multiValueRemove: (provided) => ({
-			...provided,
-			color: '#fff',
-			backgroundColor: isDarkMode ? '#60a5fa' : '#f87171',
-			':hover': {
-				backgroundColor: isDarkMode ? '#3b82f6' : '#f43f5e',
-				color: '#fff',
-			},
-		}),
-		input: (provided) => ({
-			...provided,
-			color: isDarkMode ? '#fff' : '#000',
-		}),
-		singleValue: (provided) => ({
-			...provided,
-			color: isDarkMode ? '#fff' : '#000',
-		}),
-	};
 	const { warning } = useToast();
+	const prevFiltersRef = useRef();
+
 	const [title, setTitle] = useState('');
 	const [debouncedTitle, setDebouncedTitle] = useState('');
 	const [selectedGenres, setSelectedGenres] = useState([]);
@@ -83,29 +21,28 @@ export default function Filters({ onSubmit, initialTitle = '', filters }) {
 	const [showGenres, setShowGenres] = useState(false);
 	const [showPublishers, setShowPublishers] = useState(false);
 	const [showDevelopers, setShowDevelopers] = useState(false);
+
 	const { genres, publishers, developers } = useDynamicFilters();
 
 	useEffect(() => {
 		setTitle(initialTitle);
+		setDebouncedTitle(initialTitle);
 	}, [initialTitle]);
 
-	const prevFiltersRef = useRef();
-
 	useEffect(() => {
-		if (
-			filters &&
-			JSON.stringify(filters) !== JSON.stringify(prevFiltersRef.current)
-		) {
-			setTitle(filters.title || '');
-			setSelectedGenres(filters.genres || []);
+		const currentString = JSON.stringify(filters);
+		if (currentString !== prevFiltersRef.current) {
+			setTitle(filters?.title || '');
+			setDebouncedTitle(filters?.title || '');
+			setSelectedGenres(filters?.genres || []);
 			setSelectedPublishers(
-				filters.publishers?.map((p) => ({ value: p, label: p })) || [],
+				filters?.publishers?.map((p) => ({ value: p, label: p })) || [],
 			);
 			setSelectedDevelopers(
-				filters.developers?.map((d) => ({ value: d, label: d })) || [],
+				filters?.developers?.map((d) => ({ value: d, label: d })) || [],
 			);
-			setPlatform(filters.platform || 'all');
-			prevFiltersRef.current = filters;
+			setPlatform(filters?.platform || 'all');
+			prevFiltersRef.current = currentString; // 👈 agora comparamos strings, não objetos
 		}
 	}, [filters]);
 
@@ -149,6 +86,7 @@ export default function Filters({ onSubmit, initialTitle = '', filters }) {
 		}
 
 		setTitle('');
+		setDebouncedTitle('');
 		setSelectedGenres([]);
 		setSelectedPublishers([]);
 		setSelectedDevelopers([]);
@@ -178,7 +116,6 @@ export default function Filters({ onSubmit, initialTitle = '', filters }) {
 
 	return (
 		<form className="space-y-6 max-w-xl mx-auto bg-rose-100 dark:bg-gray-800 p-6 rounded shadow">
-			{/* Título */}
 			<div>
 				<label className="block font-semibold mb-1" htmlFor="title">
 					Título do jogo
@@ -193,7 +130,6 @@ export default function Filters({ onSubmit, initialTitle = '', filters }) {
 				/>
 			</div>
 
-			{/* Gêneros */}
 			<div>
 				<SectionToggle
 					label="Gêneros"
@@ -227,7 +163,6 @@ export default function Filters({ onSubmit, initialTitle = '', filters }) {
 				</AnimatePresence>
 			</div>
 
-			{/* Publicadoras */}
 			<div>
 				<SectionToggle
 					label="Publicadoras"
@@ -242,7 +177,7 @@ export default function Filters({ onSubmit, initialTitle = '', filters }) {
 								options={publishers.map((p) => ({ value: p, label: p }))}
 								value={selectedPublishers}
 								onChange={setSelectedPublishers}
-								styles={customSelectStyles}
+								styles={customSelectStyles(isDarkMode)}
 								classNamePrefix="react-select"
 								placeholder="Selecione..."
 								noOptionsMessage={() => 'Nenhuma opção'}
@@ -252,7 +187,6 @@ export default function Filters({ onSubmit, initialTitle = '', filters }) {
 				</AnimatePresence>
 			</div>
 
-			{/* Desenvolvedoras */}
 			<div>
 				<SectionToggle
 					label="Desenvolvedoras"
@@ -267,7 +201,7 @@ export default function Filters({ onSubmit, initialTitle = '', filters }) {
 								options={developers.map((d) => ({ value: d, label: d }))}
 								value={selectedDevelopers}
 								onChange={setSelectedDevelopers}
-								styles={customSelectStyles}
+								styles={customSelectStyles(isDarkMode)}
 								classNamePrefix="react-select"
 								placeholder="Selecione..."
 								noOptionsMessage={() => 'Nenhuma opção'}
@@ -277,7 +211,6 @@ export default function Filters({ onSubmit, initialTitle = '', filters }) {
 				</AnimatePresence>
 			</div>
 
-			{/* Plataforma */}
 			<div>
 				<label className="block font-semibold mb-1" htmlFor="platform">
 					Plataforma
@@ -294,7 +227,6 @@ export default function Filters({ onSubmit, initialTitle = '', filters }) {
 				</select>
 			</div>
 
-			{/* Ações */}
 			<div>
 				<button
 					type="button"
@@ -307,3 +239,66 @@ export default function Filters({ onSubmit, initialTitle = '', filters }) {
 		</form>
 	);
 }
+
+const customSelectStyles = (isDarkMode) => ({
+	control: (provided, state) => ({
+		...provided,
+		backgroundColor: isDarkMode ? '#374151' : '#ffffff',
+		borderColor: state.isFocused
+			? isDarkMode
+				? '#60a5fa'
+				: '#fda4af'
+			: isDarkMode
+			? '#4b5563'
+			: '#d1d5db',
+		boxShadow: state.isFocused
+			? `0 0 0 1px ${isDarkMode ? '#3b82f6' : '#f87171'}`
+			: 'none',
+		'&:hover': {
+			borderColor: isDarkMode ? '#3b82f6' : '#f87171',
+		},
+	}),
+	menu: (provided) => ({
+		...provided,
+		backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
+	}),
+	option: (provided, state) => ({
+		...provided,
+		backgroundColor: state.isFocused
+			? isDarkMode
+				? '#3b82f6'
+				: '#f87171'
+			: isDarkMode
+			? '#1f2937'
+			: '#ffffff',
+		color: isDarkMode ? '#fff' : '#000',
+		':active': {
+			backgroundColor: isDarkMode ? '#2563eb' : '#f43f5e',
+		},
+	}),
+	multiValue: (provided) => ({
+		...provided,
+		backgroundColor: isDarkMode ? '#4b5563' : '#fda4af',
+	}),
+	multiValueLabel: (provided) => ({
+		...provided,
+		color: isDarkMode ? '#fff' : '#000',
+	}),
+	multiValueRemove: (provided) => ({
+		...provided,
+		color: '#fff',
+		backgroundColor: isDarkMode ? '#60a5fa' : '#f87171',
+		':hover': {
+			backgroundColor: isDarkMode ? '#3b82f6' : '#f43f5e',
+			color: '#fff',
+		},
+	}),
+	input: (provided) => ({
+		...provided,
+		color: isDarkMode ? '#fff' : '#000',
+	}),
+	singleValue: (provided) => ({
+		...provided,
+		color: isDarkMode ? '#fff' : '#000',
+	}),
+});

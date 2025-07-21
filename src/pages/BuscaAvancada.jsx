@@ -60,6 +60,8 @@ export default function BuscaAvancada() {
 			setSearchFilters({
 				title: initialTitleFromSearch,
 				genres: [],
+				publishers: [],
+				developers: [],
 				platform: 'all',
 			});
 			setCurrentPage(1);
