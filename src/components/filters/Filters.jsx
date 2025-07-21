@@ -42,7 +42,7 @@ export default function Filters({ onSubmit, initialTitle = '', filters }) {
 				filters?.developers?.map((d) => ({ value: d, label: d })) || [],
 			);
 			setPlatform(filters?.platform || 'all');
-			prevFiltersRef.current = currentString; // 👈 agora comparamos strings, não objetos
+			prevFiltersRef.current = currentString;
 		}
 	}, [filters]);
 
